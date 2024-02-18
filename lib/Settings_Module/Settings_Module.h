@@ -1,7 +1,7 @@
 #ifndef Settings_Module_h
 #define Settings_Module_h
 
-#include "EEPROM.h"
+#include <EEPROM.h>
 
 #define STRBUF_LEN 256
 #define IPADDR_LEN 16

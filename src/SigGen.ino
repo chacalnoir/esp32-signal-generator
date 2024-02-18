@@ -26,13 +26,13 @@ SOFTWARE.
 #include <string.h>
 #include <stdlib.h>
 
-#include "Settings_Module.h"
-#include "WiFi_Module.h"
+#include <Settings_Module.h>
+#include <WiFi_Module.h>
 
 #include <WebServer.h>
 
-#include "DAC_Module.h"
-#include "PWM_Module.h"
+#include <DAC_Module.h>
+#include <PWM_Module.h>
 
 #include "driver/dac.h"
 #include "driver/ledc.h"
@@ -143,6 +143,7 @@ void handleReboot() {
 
 // This method is invoked to handle signal generator setup
 void handleSetup() {
+    Serial.println("Setting up sig gen");
     // Shared parameters
     uint32_t phase = 0;
     uint32_t frequency = 1000;
@@ -170,7 +171,11 @@ void handleSetup() {
         if (server->argName(i) == "resolution") { resolution = (ledc_timer_bit_t)atoi(server->arg(i).c_str()); continue; }
         if (server->argName(i) == "timer_num") { timer_num = (ledc_timer_t)atoi(server->arg(i).c_str()); continue; }
         if (server->argName(i) == "pwm_channel") { pwm_channel = (ledc_channel_t)atoi(server->arg(i).c_str()); continue; }
-        if (server->argName(i) == "dac_channel") { dac_channel = (dac_channel_t)atoi(server->arg(i).c_str()); continue; }
+        if (server->argName(i) == "dac_channel")
+        {
+            dac_channel = (dac_channel_t)atoi(server->arg(i).c_str() - 1);
+            continue;
+        }
 
         // uint32_t
         if (server->argName(i) == "clk_div") { clk_div = strtoul(server->arg(i).c_str(), NULL, 10); continue; }
@@ -189,11 +194,13 @@ void handleSetup() {
 
     if (type == "sine")
     {
+        Serial.println("Setting up sine wave");
         dac->Setup(dac_channel, clk_div, frequency, scale, phase, invert);
         server->send(200, "text/html", "Sine wave setup successful.");
     }
     if (type == "square")
     {
+        Serial.println("Setting up square wave");
         pwm->Setup(timer_num, pwm_channel, highspeed, resolution, frequency, duty, phase, out_pin);
         server->send(200, "text/html", "Square wave setup successful.");
     }
@@ -203,6 +210,7 @@ void handleSetup() {
 
 // This method is invoked to stop a signal generator
 void handleStop() {
+    Serial.println("Stopping");
     String type = "square";
     ledc_channel_t pwm_channel = LEDC_CHANNEL_0;
     dac_channel_t dac_channel = DAC_CHANNEL_1;
@@ -232,6 +240,7 @@ void handleStop() {
 
 // This method is invoked to get or set the configuration
 void handleConfig() {
+    Serial.println("Handling config");
     switch (server->method())
     {
     case HTTP_GET:

@@ -4,16 +4,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/queue.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <freertos/queue.h>
 
-#include "soc/rtc_io_reg.h"
-#include "soc/rtc_cntl_reg.h"
-#include "soc/sens_reg.h"
-#include "soc/rtc.h"
+#include <soc/rtc_io_reg.h>
+#include <soc/rtc_cntl_reg.h>
+#include <soc/sens_reg.h>
+#include <soc/rtc.h>
 
-#include "driver/dac.h"
+#include <driver/dac.h>
 
 class DAC_Module {
     public:
